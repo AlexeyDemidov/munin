@@ -21,21 +21,25 @@ service 'apache2' do
   action :stop
 end
 
-include_recipe 'nginx::default'
+# include_recipe 'nginx::default'
+nginx_install 'distro'
 
-%w(default 000-default).each do |disable_site|
-  nginx_site disable_site do
-    enable false
-    notifies :reload, 'service[nginx]'
-  end
+# %w(default 000-default).each do |disable_site|
+#   nginx_site disable_site do
+#     enable false
+#     notifies :reload, 'service[nginx]'
+#   end
+# end
+
+# munin_conf = File.join(node['nginx']['dir'], 'sites-available', 'munin.conf')
+#
+# template munin_conf do
+#   source   'nginx.conf.erb'
+#   mode     '0644'
+#   notifies :reload, 'service[nginx]' if ::File.symlink?(munin_conf)
+# end
+
+nginx_site 'munin.conf' do
+  cookbook 'munin'
+  template 'nginx.conf.erb'
 end
-
-munin_conf = File.join(node['nginx']['dir'], 'sites-available', 'munin.conf')
-
-template munin_conf do
-  source   'nginx.conf.erb'
-  mode     '0644'
-  notifies :reload, 'service[nginx]' if ::File.symlink?(munin_conf)
-end
-
-nginx_site 'munin.conf'

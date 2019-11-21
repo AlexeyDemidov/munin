@@ -1,12 +1,19 @@
+---
 driver_plugin: vagrant
 driver_config:
   require_chef_omnibus: true
 
+provisioner:
+  product_name: chef
+  product_version: 14
+
 platforms:
-  - name: ubuntu-12.04
+  - name: ubuntu-16.04
+    driver:
+      box: xenial64-lxc
+      provider: lxc
     run_list:
       - recipe[apt]
-  - name: centos-6.4
 
 suites:
   - name: client
